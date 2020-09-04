@@ -2,7 +2,10 @@
 name = "docster"
 version = "0.1.0"
 description = "Automatically extract your python docstrings into markdown documentation"
-authors = ["BujarMurati <39311213+BujarMurati@users.noreply.github.com"]
+authors = ["BujarMurati <39311213+BujarMurati@users.noreply.github.com>"]
+packages = [
+    { include = "docster" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"
