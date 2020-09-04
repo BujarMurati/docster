@@ -3,6 +3,15 @@ from typing import List
 
 
 def resolve_module_name(module_path: Path, base_dir: Path) -> str:
+    """Performs *path arithmetics* to determine a qualified module name
+
+    Args:
+        module_path (Path): path to the module whose qual name to resolve
+        base_dir (Path): path to the package root
+
+    Returns:
+        str: qualified module name, i.e. "root.foo.bar" for "root/foo/bar"
+    """
     module_path = module_path.resolve()
     base_dir = base_dir.resolve()
     return ".".join(module_path.relative_to(base_dir).parts).rstrip(".py")
