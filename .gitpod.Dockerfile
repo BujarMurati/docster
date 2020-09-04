@@ -4,4 +4,4 @@ USER gitpod
 
 ENV PIP_USER=no
 
-RUN pip install poetry && poetry install && source .venv/bin/activate
+RUN pip install poetry
