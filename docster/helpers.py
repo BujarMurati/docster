@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import List
 
+
 def resolve_module_name(module_path: Path, base_dir: Path) -> str:
     module_path = module_path.resolve()
     base_dir = base_dir.resolve()
