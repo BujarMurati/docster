@@ -3,7 +3,7 @@ from typing import List
 
 
 def resolve_module_name(module_path: Path, base_dir: Path) -> str:
-    """Performs *path arithmetics* to determine a qualified module name
+    """Performs path arithmetics to determine a qualified module name
 
     Args:
         module_path (Path): path to the module whose qual name to resolve
