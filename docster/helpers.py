@@ -17,6 +17,22 @@ def resolve_module_name(module_path: Path, base_dir: Path) -> str:
     return ".".join(module_path.relative_to(base_dir).parts).rstrip(".py")
 
 
+def resolve_doc_file_path(module_name: str, out_dir: Path, file_extension: str) -> Path:
+    """Return the absolute path to a rendered doc file
+
+    Args:
+        module_name (str): the module name, i.e. "networkx.drawing.layout"
+        out_dir (Path): the output directory, i.e. Path("/build")
+        file_extension (str): the desired file extension, i.e. ".md"
+
+    Returns:
+        Path: path to the rendered doc file,
+            i.e. Path("/build/networkx/drawing/layout.md").resolve()
+    """
+    relative_file_name = module_name.replace(".", "/") + file_extension
+    return out_dir.resolve() / relative_file_name
+
+
 def _list_files(d: Path) -> List[Path]:
     """ Recursively list files in a dir and its sub dirs """
     if d.is_file():
