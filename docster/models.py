@@ -21,14 +21,14 @@ class Node:
 class FuncDef(Node):
     """Documentation for a function or method definition"""
 
-    source: str
+    source: Optional[str]
 
 
 @dataclass
 class ClassDef(Node):
     """Representation of docstrings """
 
-    source: str
+    source: Optional[str]
     methods: List[FuncDef]
 
 

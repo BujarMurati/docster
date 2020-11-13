@@ -12,7 +12,6 @@ class DocstringVisitor(ast.NodeVisitor):
     def __init__(self, module_name: str, source: str):
         self.stack = [module_name]
         self.source = source
-        self.module = None
 
     @property
     def qual_name(self):
