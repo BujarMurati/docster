@@ -5,6 +5,8 @@ from docstring_parser.common import Docstring
 
 @dataclass
 class Node:
+    """Documentation for an AST node"""
+
     name: str
     qualified_name: str
     docstring: Optional[Docstring]
@@ -17,16 +19,22 @@ class Node:
 
 @dataclass
 class FuncDef(Node):
+    """Documentation for a function or method definition"""
+
     source: str
 
 
 @dataclass
 class ClassDef(Node):
+    """Representation of docstrings """
+
     source: str
     methods: List[FuncDef]
 
 
 @dataclass
 class Module(Node):
+    """Representation of docstrings and metadata contained in a module"""
+
     classes: List[ClassDef]
     functions: List[FuncDef]

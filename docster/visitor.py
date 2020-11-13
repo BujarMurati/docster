@@ -1,12 +1,14 @@
 import ast
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 from docstring_parser import parse as parse_docstring
 from docstring_parser.common import Docstring, ParseError
 from .models import ClassDef, FuncDef, Module
 
 
 class DocstringVisitor(ast.NodeVisitor):
+    """Traverses the AST und extracts docstring and metadata from modules, classes and callables"""
+
     def __init__(self, module_name: str, source: str):
         self.stack = [module_name]
         self.source = source
@@ -17,6 +19,7 @@ class DocstringVisitor(ast.NodeVisitor):
         return ".".join(self.stack)
 
     def visit_Module(self, module: ast.Module):
+        """Extract docstring and metadata from an ast.Module node"""
         self.module = Module(
             name=self.stack[0].split(".")[-1],
             qualified_name=self.stack[0],
@@ -29,6 +32,7 @@ class DocstringVisitor(ast.NodeVisitor):
             self.visit(child)
 
     def visit_ClassDef(self, class_def: ast.ClassDef):
+        """Extract docstring and metadata from an ast.ClassDef node"""
         self.stack.append(class_def.name)
         self.module.classes.append(
             ClassDef(
@@ -44,13 +48,14 @@ class DocstringVisitor(ast.NodeVisitor):
             self.visit(child)
         self.stack.pop()
 
-    def visit_FunctionDef(self, func_def: ast.FunctionDef):
+    def _visit_callable(self, callable: Union[ast.FunctionDef, ast.AsyncFunctionDef]):
+        """Extract docstring and metadata from any callable AST node"""
         func = FuncDef(
-            name=func_def.name,
-            qualified_name=f"{self.qual_name}.{func_def.name}",
-            docstring=self._parse_docstring(ast.get_docstring(func_def)),
-            raw_docstring=ast.get_docstring(func_def),
-            source=ast.get_source_segment(self.source, func_def),
+            name=callable.name,
+            qualified_name=f"{self.qual_name}.{callable.name}",
+            docstring=self._parse_docstring(ast.get_docstring(callable)),
+            raw_docstring=ast.get_docstring(callable),
+            source=ast.get_source_segment(self.source, callable),
         )
         parent_class = next(
             filter(
@@ -63,6 +68,14 @@ class DocstringVisitor(ast.NodeVisitor):
             self.module.functions.append(func)
         else:
             parent_class.methods.append(func)
+
+    def visit_AsyncFunctionDef(self, async_func_def: ast.AsyncFunctionDef):
+        """Extract docstring and metadata from an ast.AsyncFunctionDef node"""
+        self._visit_callable(async_func_def)
+
+    def visit_FunctionDef(self, func_def: ast.FunctionDef):
+        """Extract docstring and metadata from an ast.FunctionDef node"""
+        self._visit_callable(func_def)
 
     def _parse_docstring(self, raw: Optional[str]) -> Optional[Docstring]:
         if raw is not None:
