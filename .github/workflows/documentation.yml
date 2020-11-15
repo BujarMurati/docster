@@ -23,11 +23,14 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: '15.x'
+    - name: Extract docstrings
+      run: |
+        poetry run docster local docster -o docs/docs/docster.md -m file
     - name: Publish documentation
       env:
         GIT_PASS: ${{ secrets.GITHUB_TOKEN }}
         GIT_USER: ${{ github.actor }}
+      working-dir: ./docs
       run: |
-        poetry run docster local docster -o docs/docs/docster.md -m file
         yarn install
         yarn deploy
