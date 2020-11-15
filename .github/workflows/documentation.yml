@@ -26,23 +26,11 @@ jobs:
     - name: Extract docstrings
       run: |
         poetry run docster local docster -o docs/docs/docster.md -m file
-    - name: Add key to allow access to repository
-      env:
-        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-      run: |
-        mkdir -p ~/.ssh
-        ssh-keyscan github.com >> ~/.ssh/known_hosts
-        echo "${{ secrets.GH_PAGES_DEPLOY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        cat <<EOT >> ~/.ssh/config
-        Host github.com
-        HostName github.com
-        IdentityFile ~/.ssh/id_rsa
-        EOT
     - name: Publish documentation
       env:
-          USE_SSH: true
+          GIT_PASS: {{ secrets.GIT_TOKEN }}
           GIT_USER: git
+          USE_SSH: false
       working-directory: ./docs
       run: |
         git config --global user.email "actions@gihub.com"
