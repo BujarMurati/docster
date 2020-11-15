@@ -14,7 +14,7 @@ packages = [
 include = ["docster/py.typed"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 typer = {extras = ["all"], version = "^0.3.2"}
 gitpython = "^3.1.8"
 docstring-parser = "^0.7.3"
