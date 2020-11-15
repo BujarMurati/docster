@@ -1,4 +1,4 @@
-name: Linting and tests
+name: Tests
 
 on: [push]
 
@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8, 3.9]
+        python-version: [3.7, 3.8, 3.9]
     
     steps:
     - uses: actions/checkout@v2
@@ -22,10 +22,10 @@ jobs:
         poetry install
     - name: Check formatting with black
       run: |
-        poetry run black . --check
+        poetry run black docster --check
     - name: Lint with flake8
       run: |
-        poetry run flake8 .
+        poetry run flake8 docster
     - name: Check docstring coverage with interrogate
       run: |
         poetry run interrogate docster --generate-badge docs-badge.svg

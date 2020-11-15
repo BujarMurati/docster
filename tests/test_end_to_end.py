@@ -13,10 +13,12 @@ def test_remote(tmp_path: Path):
         [
             "remote",
             "https://github.com/plotly/dash.git",
-            "--output-dir",
+            "--output",
             str(tmp_path),
             "--package-root",
             "dash",
+            "--mode",
+            "stdout",
         ],
         catch_exceptions=False,
     )
@@ -26,7 +28,7 @@ def test_remote(tmp_path: Path):
 
 def test_local(tmp_path: Path):
     result = runner.invoke(
-        app, ["local", "docster", "--output-dir", str(tmp_path)], catch_exceptions=False
+        app, ["local", "docster", "-o", str(tmp_path)], catch_exceptions=False
     )
     print(result.stdout)
     assert result.exit_code == 0
