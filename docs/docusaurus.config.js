@@ -35,7 +35,7 @@ module.exports = {
       {
         docs: {
           // Please change this to your repo.
-          sidebarPath: require.resolve('./sidebars.ts'),
+          sidebarPath: require.resolve('./sidebars.js'),
           routeBasePath: '/',
         },
         theme: {
