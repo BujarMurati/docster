@@ -28,8 +28,10 @@ jobs:
         poetry run docster local docster -o docs/docs/docster.md -m file
     - name: Publish documentation
       env:
-          GIT_PASS: {{ secrets.GIT_TOKEN }}
+          GIT_PASS: ${{ secrets.GIT_TOKEN }}
           GIT_USER: git
+          USE_SSH: false
+          CURRENT_BRANCH: documentation
       working-directory: ./docs
       run: |
         git config --global user.email "actions@gihub.com"
