@@ -30,7 +30,7 @@ jobs:
       env:
         GIT_PASS: ${{ secrets.GITHUB_TOKEN }}
         GIT_USER: ${{ github.actor }}
-      working-dir: ./docs
+      working-directory: ./docs
       run: |
         yarn install
         yarn deploy
