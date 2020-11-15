@@ -1,6 +1,6 @@
 module.exports = {
   docs: {
-    'Docster': ['home', 'installation', 'templating'],
+    'Docster': ['home', 'templating'],
     'Reference': ['docster']
   },
 };

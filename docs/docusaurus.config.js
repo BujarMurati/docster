@@ -19,7 +19,12 @@ module.exports = {
         src: '/docster/img/logo.svg',
       },
       items: [
-      ],
+        {
+          href: 'https://github.com/BujarMurati/docster',
+          label: 'Github Repo',
+          position: 'right'
+        }
+      ]
     },
     footer: {
       style: 'dark',
