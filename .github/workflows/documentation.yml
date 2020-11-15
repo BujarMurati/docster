@@ -30,7 +30,6 @@ jobs:
       env:
           GIT_PASS: {{ secrets.GIT_TOKEN }}
           GIT_USER: git
-          USE_SSH: false
       working-directory: ./docs
       run: |
         git config --global user.email "actions@gihub.com"
