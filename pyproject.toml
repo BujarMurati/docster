@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "docster"
-version = "0.1.4"
+version = "0.1.5"
 description = "Automatically extract your python docstrings into arbitrary Jinja2 templates"
 authors = ["BujarMurati <39311213+BujarMurati@users.noreply.github.com>"]
 license = "MIT"
