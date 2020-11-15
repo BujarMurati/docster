@@ -1,11 +1,11 @@
 module.exports = {
   title: 'Docster',
   tagline: 'Statically extract docstrings from your python',
-  url: 'https://bujarmurati.github.io',
+  url: 'https://bujarmurati.github.io/docster',
   baseUrl: '/docster/',
   onBrokenLinks: 'throw',
   favicon: 'img/favicon.svg',
-  organizationName: 'bujarmurati', // Usually your GitHub org/user name.
+  organizationName: 'BujarMurati', // Usually your GitHub org/user name.
   projectName: 'docster', // Usually your repo name.
   themeConfig: {
     colorMode: {
@@ -35,7 +35,7 @@ module.exports = {
       {
         docs: {
           // Please change this to your repo.
-          sidebarPath: require.resolve('./sidebars.ts'),
+          sidebarPath: require.resolve('./sidebars.js'),
           routeBasePath: '/',
         },
         theme: {
