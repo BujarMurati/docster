@@ -1,24 +1,35 @@
-#{{ module.qualified_name }}
+---
+id: {{ package.name }}
+title: {{ package.name }}
+slug: {{ "/" + package.name}}
+---
 
-```python
+{% for module in package.modules %}
+# {{ module.qualified_name }}
+
+{% if module.raw_docstring %}
+```
 {{module.raw_docstring or ""}}
 ```
+{% endif %}
+
 {% for class_ in module.classes %}
 ## {{class_.qualified_name}}
-```python
+```
 {{ class_.raw_docstring or "" }}
 ```
 {% for method in class_.methods %}
 ### {{method.qualified_name}}
-```python
-{{method.raw_docstring}}
+```
+{{method.raw_docstring or ""}}
 ```
 {% endfor %}
 {% endfor %}
 
 {% for function in module.functions %}
 ## {{function.qualified_name}}
-```python
+```
 {{ function.raw_docstring }}
 ```
+{% endfor %}
 {% endfor %}

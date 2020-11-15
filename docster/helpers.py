@@ -13,7 +13,7 @@ def resolve_module_name(module_path: Path, base_dir: Path) -> str:
         str: qualified module name, i.e. "root.foo.bar" for "root/foo/bar"
     """
     module_path = module_path.resolve()
-    base_dir = base_dir.resolve()
+    base_dir = base_dir.resolve().parent
     return ".".join(module_path.relative_to(base_dir).parts).rstrip(".py")
 
 
