@@ -31,7 +31,7 @@ def process_package(package_root: Path) -> Package:
         for module_path in module_paths
     ]
     return Package(
-        name=resolve_module_name(package_root, package_root), modules=modules
+        name=resolve_module_name(package_root, package_root), _modules=modules
     )
 
 

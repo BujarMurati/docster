@@ -22,8 +22,8 @@ class DocstringVisitor(ast.NodeVisitor):
         self.module = Module(
             name=self.stack[0].split(".")[-1],
             qualified_name=self.stack[0],
-            classes=[],
-            functions=[],
+            _classes=[],
+            _functions=[],
             docstring=self._parse_docstring(ast.get_docstring(module)),
             raw_docstring=ast.get_docstring(module),
         )
@@ -33,14 +33,14 @@ class DocstringVisitor(ast.NodeVisitor):
     def visit_ClassDef(self, class_def: ast.ClassDef):
         """Extract docstring and metadata from an ast.ClassDef node"""
         self.stack.append(class_def.name)
-        self.module.classes.append(
+        self.module._classes.append(
             ClassDef(
                 name=class_def.name,
                 qualified_name=self.qual_name,
                 docstring=self._parse_docstring(ast.get_docstring(class_def)),
                 raw_docstring=ast.get_docstring(class_def),
                 source=ast.get_source_segment(self.source, class_def),
-                methods=[],
+                _methods=[],
             )
         )
         for child in ast.iter_child_nodes(class_def):
@@ -51,7 +51,7 @@ class DocstringVisitor(ast.NodeVisitor):
         """Extract docstring and metadata from any callable AST node"""
         func = FuncDef(
             name=callable.name,
-            qualified_name=f"{self.qual_name}.{callable.name}",
+            qualified_name=self._get_qual_name(callable.name),
             docstring=self._parse_docstring(ast.get_docstring(callable)),
             raw_docstring=ast.get_docstring(callable),
             source=ast.get_source_segment(self.source, callable),
@@ -59,14 +59,14 @@ class DocstringVisitor(ast.NodeVisitor):
         parent_class = next(
             filter(
                 lambda class_def: class_def.name in func.qualified_name,
-                self.module.classes,
+                self.module._classes,
             ),
             None,
         )
         if parent_class is None:
-            self.module.functions.append(func)
+            self.module._functions.append(func)
         else:
-            parent_class.methods.append(func)
+            parent_class._methods.append(func)
 
     def visit_AsyncFunctionDef(self, async_func_def: ast.AsyncFunctionDef):
         """Extract docstring and metadata from an ast.AsyncFunctionDef node"""
@@ -83,6 +83,19 @@ class DocstringVisitor(ast.NodeVisitor):
             except ParseError:
                 return None
         return None
+
+    def _get_qual_name(self, name: str) -> str:
+        """Resolve a node's qualified name
+        '__init__' resolved to the node's parent's qualified name
+        Args:
+            name (str): the node's unqualified name
+
+        Returns:
+            str: the mode's qualified name
+        """
+        if name == "__init__":
+            return self.qual_name
+        return f"{self.qual_name}.{name}"
 
 
 def parse(module: Path, module_name: str) -> Module:
