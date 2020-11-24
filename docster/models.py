@@ -19,27 +19,64 @@ class Node:
     raw_docstring: Optional[Docstring]
 
 
+def _filter_private(nodes: List[Node]) -> List[Node]:
+    return [n for n in nodes if not n.name.startswith("_")]
+
+
 @dataclass
 class FuncDef(Node):
     """Documentation for a function or method definition"""
 
     source: Optional[str]
 
+    @property
+    def signature(self) -> str:
+        """Get the function or method signature as a string"""
+        if not self.source:
+            return ""
+        return "".join(self.source.partition(":\n")[:-1]).strip()
+
 
 @dataclass
 class ClassDef(Node):
-    """Representation of docstrings """
+    """Representation of docstrings for a class"""
 
     source: Optional[str]
-    methods: List[FuncDef]
+    _methods: List[FuncDef]
+
+    @property
+    def methods(self) -> List[FuncDef]:
+        """Get non-private and non-dunder  methods of a class
+
+        Returns:
+            List[FuncDef]: A list of docster.models.FuncDef objects
+        """
+        return _filter_private(self._methods)
+
+    @property
+    def constructor(self) -> Optional[FuncDef]:
+        """The __init__ method of the class, if one is explicitely defined"""
+        return next(
+            (m for m in self._methods if m.qualified_name == self.qualified_name), None
+        )
 
 
 @dataclass
 class Module(Node):
     """Representation of docstrings and metadata contained in a module"""
 
-    classes: List[ClassDef]
-    functions: List[FuncDef]
+    _classes: List[ClassDef]
+    _functions: List[FuncDef]
+
+    @property
+    def classes(self) -> List[ClassDef]:
+        """List of public classes in the module"""
+        return _filter_private(self._classes)
+
+    @property
+    def functions(self) -> List[FuncDef]:
+        """List of public functions in the module"""
+        return _filter_private(self._functions)
 
 
 @dataclass
@@ -47,7 +84,12 @@ class Package:
     """Representation of docstrings and metadata contained in a Package"""
 
     name: str
-    modules: List[Module]
+    _modules: List[Module]
+
+    @property
+    def modules(self) -> List[Module]:
+        """List of public modules in the package"""
+        return _filter_private(self._modules)
 
     def render(self, template: Template) -> str:
         """Render a template with the package"""
